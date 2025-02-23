@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -19,5 +20,15 @@ model tahun_akademik {
   id            Int      @id @default(autoincrement())
   tahun_mulai   String
   tahun_selesai String
+  fakultas      Fakultas @relation(fields: [fakultas_id], references: [id])
+  fakultas_id   Int
   createdAt     DateTime @default(now())
+}
+
+model Fakultas {
+  id             Int              @id @default(autoincrement())
+  kode           String
+  nama_fakultas  String
+  tahun_akademik tahun_akademik[]
+  createdAt      DateTime         @default(now())
 }

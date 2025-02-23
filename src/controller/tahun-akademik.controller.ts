@@ -8,10 +8,18 @@ import { ItahunAkademik } from "../types";
 export const getAll = async (req: Request, res: Response) => {
   try {
     const result = await prisma.tahun_akademik.findMany({
+      relationLoadStrategy: "join",
       select: {
         id: true,
         tahun_mulai: true,
         tahun_selesai: true,
+        fakultas: {
+          select: {
+            id: true,
+            kode: true,
+            nama_fakultas: true,
+          },
+        },
       },
     });
 
@@ -37,6 +45,7 @@ export const getOne = async (req: Request, res: Response) => {
         id: true,
         tahun_mulai: true,
         tahun_selesai: true,
+        fakultas: true,
       },
     });
 
@@ -54,11 +63,12 @@ export const getOne = async (req: Request, res: Response) => {
 
 export const createData = async (req: Request, res: Response) => {
   try {
-    const { tahun_mulai, tahun_selesai } = req.body as ItahunAkademik;
+    const { tahun_mulai, tahun_selesai, fakultas_id } = req.body as ItahunAkademik;
     const result = await prisma.tahun_akademik.create({
       data: {
         tahun_mulai,
         tahun_selesai,
+        fakultas_id,
       },
     });
 
@@ -72,7 +82,7 @@ export const createData = async (req: Request, res: Response) => {
 export const updateData = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { tahun_mulai, tahun_selesai } = req.body as ItahunAkademik;
+    const { tahun_mulai, tahun_selesai, fakultas_id } = req.body as ItahunAkademik;
     const result = await prisma.tahun_akademik.update({
       where: {
         id: Number(id),
@@ -80,6 +90,7 @@ export const updateData = async (req: Request, res: Response) => {
       data: {
         tahun_mulai,
         tahun_selesai,
+        fakultas_id,
       },
       select: {
         id: true,
